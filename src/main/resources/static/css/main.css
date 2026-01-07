@@ -1,0 +1,74 @@
+body { 
+    margin: 0; 
+    font-family: Arial, sans-serif; 
+}
+
+/* 상단 */
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 15px;
+    border-bottom: 1px solid #ccc;
+    background-color: #fff;
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    height: 50px;
+}
+
+.header-left { flex: 1; }
+
+.icon {
+    width: 28px;
+    height: 28px;
+    cursor: pointer;
+}
+
+/* 가운데 새로고침 */
+#refreshBtn {
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+/* 오른쪽 검색 */
+#searchBtn {
+    position: absolute;
+    right: 15px;
+}
+
+/* 게시글 영역 */
+.content { 
+    padding-bottom: 70px; /* 하단 네비 때문에 공간 확보 */ 
+}
+
+/* 하단 네비 */
+.bottom-nav {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 60px;
+    background-color: #f2f2f2;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    border-top: 1px solid #ccc;
+}
+
+.nav-item { 
+    text-align: center; 
+    flex: 1; 
+}
+
+.nav-icon {
+    width: 28px;
+    height: 28px;
+    filter: grayscale(100%); /* 기본 회색 */
+    cursor: pointer;
+}
+
+.nav-icon.active {
+    filter: none; /* 활성화 시 컬러 */
+}
