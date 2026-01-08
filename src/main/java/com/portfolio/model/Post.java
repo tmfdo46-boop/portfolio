@@ -40,12 +40,27 @@ public class Post {
         this.createdAt = LocalDateTime.now();
     }
 
+    @Column(name = "LIKE_COUNT", nullable = false)
+    private int likeCount = 0; // 기본값 0
+
+    public void incrementLike() {
+        this.likeCount++;
+    }
+
+    public void decrementLike() {
+        if (this.likeCount > 0) this.likeCount--;
+    }
     // 생성자
     public Post() {}
     
     public Post(User user, String content) {
         this.user = user;
         this.content = content;
+    }
+
+    public void addImage(PostImage image) {
+        images.add(image);
+        image.setPost(this);
     }
 
     // getter / setter
@@ -59,4 +74,6 @@ public class Post {
     public void setCreatedAt(LocalDateTime createdAt) { this.createdAt = createdAt; }
     public List<PostImage> getImages() { return images; }
     public void setImages(List<PostImage> images) { this.images = images; }
+    public int getLikeCount() { return likeCount; }
+    public void setLikeCount(int likeCount) { this.likeCount = likeCount; }
 }

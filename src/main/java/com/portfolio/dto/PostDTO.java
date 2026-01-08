@@ -8,7 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class PostDTO {
+public class PostDto {
 
     private Long id;
     private String content;
@@ -17,7 +17,7 @@ public class PostDTO {
     private List<String> imagePaths = new ArrayList<>();
 
     // 생성자
-    public PostDTO(Post post) {
+    public PostDto(Post post) {
         this.id = post.getId();
         this.content = post.getContent();
         this.authorName = post.getUser().getName();

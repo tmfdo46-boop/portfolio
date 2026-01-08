@@ -1,0 +1,17 @@
+<div class="write-container">
+    <textarea id="postContent" placeholder="무슨 생각을 하고 있나요?"></textarea>
+    <!-- 이미지 아이콘 -->
+    <div id="imageUploadContainer" style="margin-top:10px;">
+        <img id="fileIcon" src="/icons/image.png" alt="이미지 업로드" style="width:40px; cursor:pointer;">
+    </div>
+
+    <!-- 숨겨진 파일 input -->
+    <input type="file" id="postImage" accept="image/*" multiple style="display:none;">
+
+    <!-- 이미지 미리보기 영역 -->
+    <div id="previewContainer" style="margin-top:10px;"></div>
+
+    <button id="postSubmitBtn" style="background-color: #54acf9;">게시</button>
+</div>
+
+<script src="/js/postWrite.js?ver=1.0"></script>
