@@ -1,10 +1,14 @@
 package com.portfolio.controller;
 
+import com.portfolio.dto.PostDetailDto;
+import com.portfolio.dto.PostDto;
 import com.portfolio.dto.PostResponseDto;
 import com.portfolio.model.Post;
 import com.portfolio.model.PostImage;
 import com.portfolio.model.User;
+
 import com.portfolio.service.PostService;
+
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -13,6 +17,7 @@ import java.nio.file.*;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
+import java.util.stream.Collectors;
 
 import javax.servlet.http.HttpSession;
 
@@ -26,12 +31,13 @@ public class PostController {
         this.postService = postService;
     }
 
-    // 게시글 목록 조회 (DTO 사용)
     @GetMapping("/list")
-    public List<PostResponseDto> list() {
-        return postService.findAll().stream()
-                        .map(PostResponseDto::new)
-                        .toList();
+    @ResponseBody
+    public List<PostDto> getPosts(){
+        return postService.getAllPosts()
+                        .stream()
+                        .map(PostDto::new)
+                        .collect(Collectors.toList());
     }
 
     // 글쓰기 fragment
@@ -112,5 +118,11 @@ public class PostController {
         postService.save(post);
         return new PostResponseDto(post);
     }
-
+    
+    // 게시글 상세
+    @GetMapping("/detail/{id}")
+    public PostDetailDto getPostDetail(@PathVariable Long id) {
+        Post post = postService.findById(id);
+        return new PostDetailDto(post);
+    }
 }

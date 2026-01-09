@@ -7,6 +7,7 @@ import java.util.List;
 import javax.persistence.*;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 @Entity
 @Table(name = "TB_POST")
@@ -50,6 +51,11 @@ public class Post {
     public void decrementLike() {
         if (this.likeCount > 0) this.likeCount--;
     }
+
+    @OneToMany(mappedBy="post")
+    @JsonIgnore
+    private List<Comment> comments;
+
     // 생성자
     public Post() {}
     
@@ -76,4 +82,6 @@ public class Post {
     public void setImages(List<PostImage> images) { this.images = images; }
     public int getLikeCount() { return likeCount; }
     public void setLikeCount(int likeCount) { this.likeCount = likeCount; }
+    public List<Comment> getComments() { return comments; }
+    public void setComments(List<Comment> comments) { this.comments = comments; }
 }

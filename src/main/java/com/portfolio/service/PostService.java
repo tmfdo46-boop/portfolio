@@ -19,8 +19,15 @@ public class PostService {
         this.postImageRepository = postImageRepository;
     }
 
-    public List<Post> getPosts() {
+    // 전체 게시글 조회
+    public List<Post> getAllPosts() {
         return postRepository.findAllByOrderByCreatedAtDesc();
+    }
+
+    // 단건 게시글 조회
+    public Post getPost(Long id) {
+        return postRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("게시글 없음"));
     }
     
     public Post save(Post post) {
@@ -29,10 +36,6 @@ public class PostService {
     
     public void savePostImages(List<PostImage> images) {
         postImageRepository.saveAll(images);
-    }
-
-    public List<Post> findAll() {
-        return postRepository.findAllByOrderByCreatedAtDesc();
     }
     
     public Post findById(Long postId) {

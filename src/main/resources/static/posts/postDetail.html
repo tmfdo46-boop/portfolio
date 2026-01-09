@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>게시글 상세</title>
+    <link rel="stylesheet" href="/css/main.css">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</head>
+<body>
+
+<div class="post-detail" id="postDetailArea">
+    <!-- 게시글 내용 -->
+    <div id="postContent" class="post-content"></div>
+
+    <!-- 댓글 영역 -->
+    <div class="comment-section">
+        <h4>댓글</h4>
+        <div id="commentList"></div>
+        <div class="comment-input">
+            <input type="text" id="commentContent" placeholder="댓글을 입력하세요">
+            <button id="commentBtn">등록</button>
+        </div>
+    </div>
+</div>

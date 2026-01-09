@@ -42,6 +42,17 @@ $(document).ready(function() {
         loadPosts();
     });
 
+    // 게시글 클릭
+    $(document).on("click", ".post", function(e){
+        if ($(e.target).closest(".like-btn").length > 0) return;
+
+        const postId = $(this).data("post-id");
+
+        $("#content").load("/posts/postDetail.html", function() {
+            // postId를 여기서 직접 사용
+            initPostDetail(postId);
+        });
+    });
     $("#writeBtn").click(function() {
         setActiveNav("writeBtn");
         $("#content").load("/posts/postWrite.html"); // 글쓰기 화면 불러오기
@@ -60,6 +71,11 @@ $(document).ready(function() {
     $("#alertBtn").click(function() {
         setActiveNav("alertBtn");
         $("#content").load("/alerts/list"); // 알림 화면
+    });
+    
+    $("#writeBtn").click(function () {
+        setActiveNav("writeBtn");
+        $("#content").load("/posts/write");
     });
 
     // --------------------------
@@ -95,11 +111,6 @@ $(document).ready(function() {
         }
     });
 
-});
-
-$("#writeBtn").click(function () {
-    setActiveNav("writeBtn");
-    $("#content").load("/posts/write");
 });
 
 // 이벤트 위임
@@ -145,67 +156,52 @@ function setActiveNav(targetId) {
 // 게시글 불러오기
 // --------------------------
 function loadPosts() {
-    $.ajax({
-        type: "GET",
-        url: "/posts/list",
-        success: function(posts) {
-            renderPosts(posts);
-        },
-        error: function() {
-            alert("게시글 불러오기 실패");
-        }
-    });
-}
+    $.get("/posts/list", function(posts){
+        const postList = $("#postList");
+        postList.empty();
+        posts.forEach(post=>{
+            // createdAt 포맷 처리 (방금 전 / n분 전 / HH:mm)
+            const createdAt = formatTimeAgo(post.createdAt);
+            
+            // 게시글 이미지가 있으면 <img> 추가
+            let postImagesHtml = '';
+            if (post.imagePaths && post.imagePaths.length > 0) {
+                postImagesHtml = '<div class="post-images-container">';
+                post.imagePaths.forEach(url => {
+                    postImagesHtml += `<img src="${url}" alt="게시글 이미지">`;
+                });
+                postImagesHtml += '</div>';
+            }
 
-// --------------------------
-// 게시글 렌더링
-// --------------------------
-function renderPosts(posts) {
-    const postList = $("#postList");
-    postList.empty(); // 기존 게시글 초기화
+            const postHtml = `
+                <div class="post" data-post-id="${post.id}">
+                    <div class="post-header">
+                        <div class="post-user">
+                            <span class="nickname">${post.authorName}</span>
+                            <span class="created-at">${createdAt}</span>
+                        </div>
+                    </div>
 
-    posts.forEach(post => {
-        // createdAt 포맷 처리 (방금 전 / n분 전 / HH:mm)
-        const createdAt = formatTimeAgo(post.createdAt);
-        
-        // 게시글 이미지가 있으면 <img> 추가
-        let postImagesHtml = '';
-        if (post.imageUrls && post.imageUrls.length > 0) {
-            postImagesHtml = '<div class="post-images-container">';
-            post.imageUrls.forEach(url => {
-                postImagesHtml += `<img src="${url}" alt="게시글 이미지">`;
-            });
-            postImagesHtml += '</div>';
-        }
+                    <div class="post-content">
+                        <p>${post.content}</p>
+                        ${postImagesHtml}
+                    </div>
 
-        const postHtml = `
-            <div class="post" data-post-id="${post.id}">
-                <div class="post-header">
-                    <div class="post-user">
-                        <span class="nickname">${post.nickname}</span>
-                        <span class="created-at">${createdAt}</span>
+                    <div class="post-footer">
+                        <div class="post-action like-btn">
+                            <img src="/icons/like.png">
+                            <span class="like-count">${post.likeCount}</span>
+                        </div>
+                        <div class="post-action">
+                            <img src="/icons/comment.png">
+                            <span>0</span>
+                        </div>
                     </div>
                 </div>
+            `;
 
-                <div class="post-content">
-                    <p>${post.content}</p>
-                    ${postImagesHtml}
-                </div>
-
-                <div class="post-footer">
-                    <div class="post-action like-btn">
-                        <img src="/icons/like.png">
-                        <span class="like-count">${post.likeCount}</span>
-                    </div>
-                    <div class="post-action">
-                        <img src="/icons/comment.png">
-                        <span>0</span>
-                    </div>
-                </div>
-            </div>
-        `;
-
-        postList.append(postHtml);
+            postList.append(postHtml);
+        });
     });
 }
 
@@ -225,34 +221,67 @@ function formatTimeAgo(timeString) {
     return `${date.getMonth()+1}월 ${date.getDate()}일 ${date.getHours()}:${String(date.getMinutes()).padStart(2,'0')}`;
 }
 
-function renderSinglePost(post) {
-    let postImagesHtml = '';
-    if (post.imageUrls && post.imageUrls.length > 0) {
-        post.imageUrls.forEach(url => {
-            postImagesHtml += `<div class="post-image"><img src="${url}" alt="게시글 이미지"></div>`;
+// 게시글 상세 페이지
+function initPostDetail(postId){
+    // 게시글 단건
+    $.get("/posts/detail/" + postId, function(post){
+        let imagesHtml = '';
+        if (post.imageUrls && post.imageUrls.length > 0) {
+            imagesHtml = '<div class="post-images-container">';
+            post.imageUrls.forEach(url => {
+                imagesHtml += `<img src="${url}" class="detail-image">`;
+            });
+            imagesHtml += '</div>';
+        }
+
+        $("#postContent").html(`
+            <div class="post" data-post-id="${post.id}">
+                <div class="post-header">
+                    <span class="nickname">${post.nickname}</span>
+                    <span class="created-at">${formatTimeAgo(post.createdAt)}</span>
+                </div>
+
+                <div class="post-content">
+                    <p>${post.content}</p>
+                    ${imagesHtml}
+                </div>
+
+                <div class="post-footer">
+                    <div class="post-action like-btn">
+                        <img src="/icons/like.png">
+                        <span class="like-count">${post.likeCount}</span>
+                    </div>
+                </div>
+            </div>
+        `);
+    });
+
+    // 댓글 로드
+    function loadComments(){
+        $.get(`/comments/${postId}`, function(comments){
+            const list = $("#commentList");
+            list.empty();
+            comments.forEach(c=>{
+                list.append(`<div class="comment"><b>${c.authorName}</b>: ${c.content}</div>`);
+            });
         });
     }
+    loadComments();
 
-    return `
-        <div class="post" data-post-id="${post.id}">
-            <div class="post-header">
-                <div class="post-user">
-                    <span class="nickname">${post.nickname}</span>
-                    <span class="created-at">방금 전</span>
-                </div>
-            </div>
-            <div class="post-content">${post.content}</div>
-            ${postImagesHtml}
-            <div class="post-footer">
-                <div class="post-action like-btn">
-                    <img src="/icons/like.png">
-                    <span class="like-count">${post.likeCount}</span>
-                </div>
-                <div class="post-action">
-                    <img src="/icons/comment.png">
-                    <span>0</span>
-                </div>
-            </div>
-        </div>
-    `;
+    // 댓글 작성
+    $("#commentBtn").off("click").on("click", function(){
+        const content = $("#commentContent").val();
+        if(!content) return;
+
+        $.ajax({
+            type: "POST",
+            url: "/comments/saveComment",
+            contentType: "application/json",
+            data: JSON.stringify({ postId: postId, content: content }),
+            success: function(){
+                $("#commentContent").val("");
+                loadComments();
+            }
+        });
+    });
 }
