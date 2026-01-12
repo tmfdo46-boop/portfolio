@@ -35,4 +35,9 @@ public class UserService {
         }
         return null;
     }
+    
+    public User findById(Long id) {
+        return userRepository.findById(id).orElseThrow(() ->
+                new IllegalArgumentException("해당 유저가 존재하지 않습니다. id=" + id));
+    }
 }

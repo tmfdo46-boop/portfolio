@@ -176,10 +176,9 @@ function loadPosts() {
             const postHtml = `
                 <div class="post" data-post-id="${post.id}">
                     <div class="post-header">
-                        <div class="post-user">
-                            <span class="nickname">${post.authorName}</span>
-                            <span class="created-at">${createdAt}</span>
-                        </div>
+                        <img class="profile-img" src="${post.profileImage}">
+                        <span class="nickname">${post.authorName}</span>
+                        <span class="created-at">${createdAt}</span>
                     </div>
 
                     <div class="post-content">
@@ -232,10 +231,9 @@ function renderSinglePost(post) {
     return `
         <div class="post" data-post-id="${post.id}">
             <div class="post-header">
-                <div class="post-user">
-                    <span class="nickname">${post.nickname}</span>
-                    <span class="created-at">방금 전</span>
-                </div>
+                <img class="profile-img" src="${post.profileImage}">
+                <span class="nickname">${post.nickname}</span>
+                <span class="created-at">방금 전</span>
             </div>
             <div class="post-content">${post.content}</div>
             ${postImagesHtml}

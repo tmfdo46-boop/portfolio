@@ -1,13 +1,13 @@
 package com.portfolio.controller;
 
 import com.portfolio.dto.PostDetailDto;
-import com.portfolio.dto.PostDto;
 import com.portfolio.dto.PostResponseDto;
 import com.portfolio.model.Post;
 import com.portfolio.model.PostImage;
 import com.portfolio.model.User;
 
 import com.portfolio.service.PostService;
+import com.portfolio.service.FollowService;
 
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -17,7 +17,6 @@ import java.nio.file.*;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
-import java.util.stream.Collectors;
 
 import javax.servlet.http.HttpSession;
 
@@ -26,18 +25,18 @@ import javax.servlet.http.HttpSession;
 public class PostController {
 
     private final PostService postService;
+    private final FollowService followService;
 
-    public PostController(PostService postService) {
+    public PostController(PostService postService, FollowService followService) {
         this.postService = postService;
+        this.followService = followService;
     }
 
     @GetMapping("/list")
     @ResponseBody
-    public List<PostDto> getPosts(){
-        return postService.getAllPosts()
-                        .stream()
-                        .map(PostDto::new)
-                        .collect(Collectors.toList());
+    public List<PostResponseDto> getPosts(HttpSession session){
+        User loginUser = (User) session.getAttribute("loginUser");
+        return postService.getAllPostsWithFollow(loginUser);
     }
 
     // 글쓰기 fragment
@@ -121,8 +120,15 @@ public class PostController {
     
     // 게시글 상세
     @GetMapping("/detail/{id}")
-    public PostDetailDto getPostDetail(@PathVariable Long id) {
+    public PostDetailDto getPostDetail(@PathVariable Long id, HttpSession session) {
         Post post = postService.findById(id);
-        return new PostDetailDto(post);
+        User loginUser = (User) session.getAttribute("loginUser");
+
+        boolean isFollowing = false;
+        if (loginUser != null && !loginUser.getId().equals(post.getUser().getId())) {
+            isFollowing = followService.isFollowing(loginUser.getId(), post.getUser().getId());
+        }
+
+        return new PostDetailDto(post, isFollowing);
     }
 }

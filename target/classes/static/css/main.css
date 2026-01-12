@@ -87,11 +87,20 @@ body {
     margin-bottom: 2px;
 }
 
-.post-profile {
-    width: 36px;
-    height: 36px;
+.profile-img {
+    width: 32px;
+    height: 32px;
     border-radius: 50%;
-    margin-right: 10px;
+}
+
+.nickname {
+    font-weight: bold;
+}
+
+.created-at {
+    font-size: 12px;
+    color: #888;
+    margin-left: auto; 
 }
 
 .post-user {
@@ -99,14 +108,11 @@ body {
     flex-direction: column;
 }
 
-.nickname {
-    font-weight: 600;
-    font-size: 14px;
-}
-
-.created-at {
-    font-size: 12px;
-    color: #999;
+.post-profile {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    margin-right: 10px;
 }
 
 /* content */
@@ -241,4 +247,206 @@ body {
 }
 .comment-input button:hover {
     background: #0056b3;
+}
+
+.messages-wrapper {
+    display: flex;
+    height: calc(100vh - 120px);
+}
+
+.friend-list {
+    width: 35%;
+    border-right: 1px solid #ddd;
+    overflow-y: auto;
+    background-color: #fafafa;
+}
+
+.friend-list ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.friend-item {
+    display: flex;           /* 가로로 나열 */
+    align-items: center;     /* 수직 중앙 정렬 */
+    padding: 8px 12px;
+    cursor: pointer;
+    border-bottom: 1px solid #eee;
+}
+
+.friend-item:hover {
+    background-color: #f5f5f5;
+}
+
+.friend-profile {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    object-fit: cover;
+    margin-right: 8px;
+}
+
+.friend-nickname {
+    font-weight: 500;
+}
+
+.chat-area {
+    width: 65%;
+    display: flex;
+    flex-direction: column;
+    background-color: #fff;
+}
+
+#chatMessages {
+    flex: 1;
+    padding: 10px;
+    overflow-y: auto;
+}
+
+.my-message {
+    text-align: right;
+    margin: 5px 0;
+    background-color: #dcf8c6;
+    display: inline-block;
+    padding: 6px 10px;
+    border-radius: 10px;
+}
+
+.friend-message {
+    text-align: left;
+    margin: 5px 0;
+    background-color: #f1f0f0;
+    display: inline-block;
+    padding: 6px 10px;
+    border-radius: 10px;
+}
+
+.chat-input {
+    display: flex;
+    border-top: 1px solid #ddd;
+}
+
+.chat-input input {
+    flex: 1;
+    padding: 10px;
+    border: none;
+}
+
+.chat-input button {
+    width: 80px;
+    border: none;
+    background-color: #4caf50;
+    color: #fff;
+    cursor: pointer;
+}
+
+.follow-btn {
+    background: #0095f6;
+    color: white;
+    border-radius: 50%;
+    width: 28px;
+    height: 28px;
+    border: none;
+    cursor: pointer;
+}
+
+.chat-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 14px;
+    border-bottom: 1px solid #eee;
+    background-color: #fff;
+}
+
+.chat-header-left {
+    display: flex;
+    align-items: center;
+}
+
+.chat-profile {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    object-fit: cover;
+    margin-right: 10px;
+}
+
+.chat-user-info {
+    display: flex;
+    flex-direction: column;
+}
+
+.chat-nickname {
+    font-size: 14px;
+    font-weight: 600;
+}
+
+.chat-status {
+    font-size: 11px;
+    color: #999;
+}
+
+.chat-header-right {
+    display: flex;
+    align-items: center;
+}
+
+.chat-header-icon {
+    width: 18px;
+    height: 18px;
+    cursor: pointer;
+}
+
+.chat-header-placeholder {
+    padding: 14px;
+    text-align: center;
+    color: #999;
+    border-bottom: 1px solid #eee;
+    font-size: 14px;
+}
+.chat-messages {
+    padding: 10px;
+    overflow-y: auto;
+    height: calc(100vh - 180px);
+}
+
+/* 한 줄 단위 */
+.message-row {
+    display: flex;
+    margin-bottom: 6px;
+}
+
+/* 내 메시지 → 오른쪽 */
+.message-row.my {
+    justify-content: flex-end;
+}
+
+/* 상대 메시지 → 왼쪽 */
+.message-row.other {
+    justify-content: flex-start;
+}
+
+/* 말풍선 */
+.message-bubble {
+    max-width: 70%;
+    padding: 8px 12px;
+    border-radius: 14px;
+    font-size: 13px;
+    line-height: 1.4;
+}
+
+/* 내 말풍선 */
+.my-bubble {
+    background-color: #4a90e2;
+    color: white;
+    border-bottom-right-radius: 4px;
+}
+
+/* 상대 말풍선 */
+.other-bubble {
+    background-color: #f1f1f1;
+    color: #333;
+    border-bottom-left-radius: 4px;
 }

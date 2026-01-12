@@ -44,6 +44,22 @@ public class User {
         this.createdAt = LocalDateTime.now();
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof User)) return false;
+        User user = (User) o;
+        return id != null && id.equals(user.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return 31;
+    }
+    
+    @Column(name = "PROFILE_IMAGE", length = 300)
+    private String profileImage;
+
     // 기본 생성자
     public User() {}
 
@@ -74,4 +90,6 @@ public class User {
     public void setAddress(String address) { this.address = address; }
     public LocalDateTime getCreatedAt() { return createdAt; }
     public void setCreatedAt(LocalDateTime createdAt) { this.createdAt = createdAt; }
+    public String getProfileImage() { return profileImage; }
+    public void setProfileImage(String profileImage) { this.profileImage = profileImage; }
 }
