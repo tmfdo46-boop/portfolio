@@ -5,7 +5,6 @@ import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
 
-import com.portfolio.dto.PostDto;
 import com.portfolio.dto.PostResponseDto;
 import com.portfolio.model.Post;
 import com.portfolio.model.PostImage;
@@ -23,14 +22,6 @@ public class PostService {
         this.postRepository = postRepository;
         this.postImageRepository = postImageRepository;
         this.followService = followService;
-    }
-
-    // 전체 게시글 조회
-    public List<PostDto> getAllPosts() {
-        List<Post> posts = postRepository.findAll();
-        return posts.stream()
-                .map(PostDto::new)
-                .collect(Collectors.toList());
     }
 
     // 단건 게시글 조회
