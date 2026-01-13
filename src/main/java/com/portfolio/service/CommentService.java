@@ -1,12 +1,17 @@
 package com.portfolio.service;
 
 import com.portfolio.dto.CommentDto;
+
+import com.portfolio.model.Alert;
 import com.portfolio.model.Comment;
 import com.portfolio.model.Post;
 import com.portfolio.model.User;
+
 import com.portfolio.repository.CommentRepository;
 import com.portfolio.repository.PostRepository;
 import com.portfolio.repository.UserRepository;
+import com.portfolio.repository.AlertRepository;
+
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -19,13 +24,16 @@ public class CommentService {
     private final CommentRepository commentRepository;
     private final PostRepository postRepository;
     private final UserRepository userRepository;
+    private final AlertRepository alertRepository;
 
     public CommentService(CommentRepository commentRepository,
                           PostRepository postRepository,
-                          UserRepository userRepository) {
+                          UserRepository userRepository,
+                          AlertRepository alertRepository) {
         this.commentRepository = commentRepository;
         this.postRepository = postRepository;
         this.userRepository = userRepository;
+        this.alertRepository = alertRepository;
     }
 
     // 댓글 조회
@@ -52,5 +60,15 @@ public class CommentService {
 
         Comment comment = new Comment(postOpt.get(), userOpt.get(), content);
         return commentRepository.save(comment);
+    }
+
+    // 댓글 알림 생성
+    public void createCommentAlert(User postUser, User commentUser, String postContent) {
+        // content 20자 이상이면 자르고 ... 붙이기
+        String preview = postContent.length() > 20 ? postContent.substring(0, 20) + "..." : postContent;
+
+        String content = commentUser.getNickname() + "님이 '" + preview + "'에 댓글을 남겼습니다.";
+        Alert alert = new Alert(postUser, content);
+        alertRepository.save(alert);
     }
 }

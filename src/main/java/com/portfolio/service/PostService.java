@@ -57,7 +57,7 @@ public class PostService {
                 if (loginUser != null && !post.getUser().getId().equals(loginUser.getId())){
                     isFollowing = followingIds.contains(post.getUser().getId());
                 }
-                return new PostResponseDto(post, isFollowing);
+                return new PostResponseDto(post, isFollowing, loginUser != null ? loginUser.getId() : null);
             })
             .collect(Collectors.toList());
     }

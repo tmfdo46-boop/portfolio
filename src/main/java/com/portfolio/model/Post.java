@@ -40,20 +40,18 @@ public class Post {
         this.createdAt = LocalDateTime.now();
     }
 
-    @Column(name = "LIKE_COUNT", nullable = false)
-    private int likeCount = 0; // 기본값 0
-
-    public void incrementLike() {
-        this.likeCount++;
-    }
-
-    public void decrementLike() {
-        if (this.likeCount > 0) this.likeCount--;
-    }
-
     @OneToMany(mappedBy="post")
     @JsonIgnore
     private List<Comment> comments;
+
+    // 좋아요 목록
+    @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Like> likes = new ArrayList<>();
+
+    // 대신 계산된 좋아요 수 반환
+    public int getLikeCount() {
+        return likes.size();
+    }
 
     // 생성자
     public Post() {}
@@ -79,8 +77,8 @@ public class Post {
     public void setCreatedAt(LocalDateTime createdAt) { this.createdAt = createdAt; }
     public List<PostImage> getImages() { return images; }
     public void setImages(List<PostImage> images) { this.images = images; }
-    public int getLikeCount() { return likeCount; }
-    public void setLikeCount(int likeCount) { this.likeCount = likeCount; }
     public List<Comment> getComments() { return comments; }
     public void setComments(List<Comment> comments) { this.comments = comments; }
+    public List<Like> getLikes() { return likes; }
+    public void setLikes(List<Like> likes) { this.likes = likes; }
 }

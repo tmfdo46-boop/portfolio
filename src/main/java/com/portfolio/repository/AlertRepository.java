@@ -12,4 +12,7 @@ import java.util.List;
 public interface AlertRepository extends JpaRepository<Alert, Long> {
     @Query("SELECT a FROM Alert a JOIN a.user u WHERE u.id = :userId ORDER BY a.createdAt DESC")
     List<Alert> findByUserIdOrderByCreatedAtDesc(@Param("userId") Long userId);
+
+    @Query("SELECT a FROM Alert a WHERE a.user.id = :userId AND a.readYn = 'N'")
+    List<Alert> findUnreadAlertsByUserId(@Param("userId") Long userId);
 }

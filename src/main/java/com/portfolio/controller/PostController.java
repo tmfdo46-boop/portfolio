@@ -1,24 +1,32 @@
 package com.portfolio.controller;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.util.List;
+import java.util.Random;
+
+import javax.servlet.http.HttpSession;
+
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
+
 import com.portfolio.dto.PostDetailDto;
 import com.portfolio.dto.PostResponseDto;
 import com.portfolio.model.Post;
 import com.portfolio.model.PostImage;
 import com.portfolio.model.User;
-
-import com.portfolio.service.PostService;
 import com.portfolio.service.FollowService;
-
-import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
-
-import java.io.IOException;
-import java.nio.file.*;
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
-import java.util.*;
-
-import javax.servlet.http.HttpSession;
+import com.portfolio.service.PostService;
 
 @RestController
 @RequestMapping("/posts")
@@ -100,22 +108,6 @@ public class PostController {
         }
 
         return new PostResponseDto(savedPost);
-    }
-    
-    @PostMapping("/like/{postId}")
-    @ResponseBody
-    public PostResponseDto likePost(
-            @PathVariable Long postId,
-            @RequestBody Map<String, Boolean> data
-    ) {
-        boolean like = data.get("like"); // true: 좋아요, false: 취소
-        Post post = postService.findById(postId);
-
-        if (like) post.incrementLike();
-        else post.decrementLike();
-
-        postService.save(post);
-        return new PostResponseDto(post);
     }
     
     // 게시글 상세

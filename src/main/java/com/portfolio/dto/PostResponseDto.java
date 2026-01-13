@@ -7,7 +7,6 @@ import com.portfolio.model.Post;
 import com.portfolio.model.PostImage;
 
 public class PostResponseDto {
-
     private Long id;
     private Long userId;
     private String content;
@@ -18,6 +17,7 @@ public class PostResponseDto {
     private int commentCount;
     private String profileImage;
     private boolean following;
+    private boolean likedByMe;
 
     public PostResponseDto(Post post) {
         this.id = post.getId();
@@ -47,9 +47,11 @@ public class PostResponseDto {
         this.likeCount = post.getLikeCount();
     }
 
-    public PostResponseDto(Post post, boolean isFollowing) {
+    public PostResponseDto(Post post, boolean isFollowing, Long loginUserId) {
         this(post);
         this.following = isFollowing;
+        this.likedByMe = post.getLikes().stream()
+                             .anyMatch(like -> like.getUser().getId().equals(loginUserId));
     }
 
     // getter / setter
@@ -73,4 +75,6 @@ public class PostResponseDto {
     public void setProfileImage(String profileImage) { this.profileImage = profileImage; }
     public boolean isFollowing() { return following; }
     public void setFollowing(boolean following) { this.following = following; }
+    public boolean isLikedByMe() { return likedByMe; }
+    public void setLikedByMe(boolean likedByMe) { this.likedByMe = likedByMe; }
 }

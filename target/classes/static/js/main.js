@@ -44,12 +44,6 @@ $(document).ready(function() {
         });
     });
 
-    // // 일정 간격으로 주기적 업데이트
-    // setInterval(() => {
-    //     updateAlertBadge();
-    //     updateMessageBadge();
-    // }, 60000); // 60초마다 갱신
-
     let loginUserId = null;
     $.get("/users/session", function(data){
         loginUserId = data.id;
@@ -187,26 +181,18 @@ $(document).ready(function() {
         const likeCountSpan = $(this).find(".like-count");
         const likeImg = $(this).find("img");
 
-        // 현재 토글 상태 확인 (클래스로 구분)
-        const liked = $(this).hasClass("liked");
-
         $.ajax({
             type: "POST",
-            url: `/posts/like/${postId}`,
-            data: JSON.stringify({ like: !liked }), // true: 좋아요, false: 취소
-            contentType: "application/json",
-            success: function(updatedPost) {
-                likeCountSpan.text(updatedPost.likeCount); // 숫자 갱신
-                if (!liked) {
+            url: `/likes/post/${postId}`,
+            success: function(postDto) {
+                if(postDto != "already") {
+                    $(`#likeCount-${postId}`).text(postDto.likeCount);
                     $(postDiv).find(".like-btn").addClass("liked");
-                    likeImg.attr("src", "/icons/like-filled.png"); // 하트 색상 변경
-                } else {
-                    $(postDiv).find(".like-btn").removeClass("liked");
-                    likeImg.attr("src", "/icons/like.png"); // 기본 하트
+                    likeImg.attr("src", "/icons/like-filled.png"); // 기본 하트
                 }
             },
             error: function() {
-                showToast("좋아요 처리 실패");
+                showToast("좋아요 실패");
             }
         });
     });
@@ -230,6 +216,8 @@ $(document).ready(function() {
                     ? `<button class="follow-btn" data-user-id="${post.userId}">+</button>`
                     : '';
 
+                const heart = post.likedByMe ? "/icons/like-filled.png" : "/icons/like.png";
+
                 const postHtml = `
                     <div class="post" data-post-id="${post.id}">
                         <div class="post-header">
@@ -245,8 +233,8 @@ $(document).ready(function() {
                         </div>
 
                         <div class="post-footer">
-                            <div class="post-action like-btn">
-                                <img src="/icons/like.png">
+                            <div class="post-action like-btn ${post.likedByMe ? 'liked' : ''}">
+                                <img src="${heart}">
                                 <span class="like-count">${post.likeCount}</span>
                             </div>
                             <div class="post-action">
@@ -507,23 +495,19 @@ $(document).ready(function() {
                 `;
                 list.append(alertHtml);
             });
+
+            // 읽음 처리
+            $.ajax({
+                type: "PUT",
+                url: "/alerts/read/" + loginUserId,
+                success: () => {
+                    $(this).removeClass("unread");
+                    updateAlertBadge()
+                },
+                error: () => { showToast("읽음 처리 실패"); }
+            });
         });
     }
-
-    // 알림 클릭 이벤트 위임
-    $(document).on("click", ".alert-item", function() {
-        const alertId = $(this).data("id");
-
-        $.ajax({
-            type: "PUT",
-            url: "/alerts/read/" + alertId,
-            success: () => {
-                $(this).removeClass("unread");
-                updateAlertBadge()
-            },
-            error: () => { showToast("읽음 처리 실패"); }
-        });
-    });
 
     // 알림 및 메시지 뱃지 업데이트
     function updateAlertBadge() {
