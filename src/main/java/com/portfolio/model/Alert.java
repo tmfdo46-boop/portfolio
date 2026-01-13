@@ -4,28 +4,22 @@ import javax.persistence.*;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "TB_MESSAGE")
-public class Message {
+@Table(name = "TB_ALERT")
+public class Alert {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "MESSAGE_SEQ_GENERATOR")
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "ALERT_SEQ_GENERATOR")
     @SequenceGenerator(
-            name = "MESSAGE_SEQ_GENERATOR",
-            sequenceName = "TB_MESSAGE_SEQ",
+            name = "ALERT_SEQ_GENERATOR",
+            sequenceName = "TB_ALERT_SEQ",
             allocationSize = 1
     )
-    @Column(name = "MESSAGE_ID")
+    @Column(name = "ALERT_ID")
     private Long id;
 
-    // 발신자
-    @ManyToOne
-    @JoinColumn(name = "SENDER_ID", nullable = false)
-    private User sender;
-
-    // 수신자
-    @ManyToOne
-    @JoinColumn(name = "RECEIVER_ID", nullable = false)
-    private User receiver;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "USER_ID", nullable = false)
+    private User user; // 알림 받는 사용자
 
     @Column(name = "CONTENT", nullable = false, length = 500)
     private String content;
@@ -41,23 +35,18 @@ public class Message {
         this.createdAt = LocalDateTime.now();
     }
 
-    // 기본 생성자
-    public Message() {}
+    public Alert() {}
 
-    // 맞춤 생성자
-    public Message(User sender, User receiver, String content) {
-        this.sender = sender;
-        this.receiver = receiver;
+    public Alert(User user, String content) {
+        this.user = user;
         this.content = content;
     }
 
     // Getter / Setter
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
-    public User getSender() { return sender; }
-    public void setSender(User sender) { this.sender = sender; }
-    public User getReceiver() { return receiver; }
-    public void setReceiver(User receiver) { this.receiver = receiver; }
+    public User getUser() { return user; }
+    public void setUser(User user) { this.user = user; }
     public String getContent() { return content; }
     public void setContent(String content) { this.content = content; }
     public LocalDateTime getCreatedAt() { return createdAt; }

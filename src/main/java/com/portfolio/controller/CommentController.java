@@ -5,6 +5,7 @@ import org.springframework.web.bind.annotation.*;
 import com.portfolio.dto.CommentDto;
 import com.portfolio.model.Comment;
 import com.portfolio.model.User;
+import com.portfolio.service.AlertService;
 import com.portfolio.service.CommentService;
 import java.util.*;
 
@@ -15,9 +16,11 @@ import javax.servlet.http.HttpSession;
 public class CommentController {
 
     private final CommentService commentService;
+    private final AlertService alertService;
 
-    public CommentController(CommentService commentService) {
+    public CommentController(CommentService commentService, AlertService alertService) {
         this.commentService = commentService;
+        this.alertService = alertService;
     }
 
     // 댓글 리스트
@@ -33,8 +36,16 @@ public class CommentController {
         User loginUser = (User) session.getAttribute("loginUser");
         Long postId = Long.valueOf(request.get("postId"));
         String content = request.get("content");
-
+        
+        // 댓글 저장
         Comment comment = commentService.saveComment(postId, loginUser.getId(), content);
+
+        // 알림 생성
+        User postAuthor = comment.getPost().getUser(); // 댓글 단 게시글 작성자
+        if(!postAuthor.getId().equals(loginUser.getId())) { // 본인 댓글이면 알림 X
+            String postContent = comment.getPost().getContent();
+            alertService.createCommentAlert(postAuthor, loginUser, postContent);
+        }
 
         // DTO로 변환해서 반환
         return new CommentDto(
@@ -43,6 +54,6 @@ public class CommentController {
             comment.getUser().getNickname(),  // 프록시 문제 방지
             comment.getCreatedAt()
         );
-}
+    }
 
 }

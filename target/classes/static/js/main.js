@@ -1,4 +1,25 @@
 $(document).ready(function() {
+    // 토스트 메시지 요소
+    const $toast = $("#toast");
+    const $toastMessage = $("#toastMessage");
+    function showToast(message, type) {
+        $toastMessage.text(message);
+        $toast.css({
+            "background-color": type === "success" ? "#54acf9" : "#e74c3c",
+            "visibility": "visible",
+            "opacity": "1"
+        });
+
+        setTimeout(() => {
+            $toast.css("opacity", "0");
+            setTimeout(() => { $toast.css("visibility", "hidden"); }, 300);
+        }, 5000);
+    }
+
+    // 초기 뱃지 업데이트
+    updateAlertBadge();
+    updateMessageBadge();
+
     // 하단 네비 버튼 이벤트
     const navIcons = ["homeBtn","messageBtn","writeBtn","alertBtn","profileBtn"];
     
@@ -8,17 +29,26 @@ $(document).ready(function() {
             navIcons.forEach(i => $("#" + i).removeClass("active"));
             // 클릭한 아이콘만 활성화
             $(this).addClass("active");
+            
+            updateAlertBadge();
+            updateMessageBadge();
 
             // 실제 화면 로딩
             switch(id) {
                 case "homeBtn": loadPosts(); break;
-                case "messageBtn": $("#content").load("/messages"); break;
-                case "writeBtn": $("#content").load("/posts/postWrite.html"); break;
-                case "alertBtn": $("#content").load("/alerts"); break;
+                case "messageBtn": $("#content").load("/messages/view", function () { loadFriends();}); break;
+                case "writeBtn": $("#content").load("/posts/write"); break;
+                case "alertBtn": $("#content").load("/alerts/view", function () { loadAlerts(); }); break;
                 case "profileBtn": $("#content").load("/users/profile"); break;
             }
         });
     });
+
+    // // 일정 간격으로 주기적 업데이트
+    // setInterval(() => {
+    //     updateAlertBadge();
+    //     updateMessageBadge();
+    // }, 60000); // 60초마다 갱신
 
     let loginUserId = null;
     $.get("/users/session", function(data){
@@ -26,9 +56,12 @@ $(document).ready(function() {
         loadPosts(); // 로그인 유저 정보 받아오고 게시글 로드
     });
 
-    // --------------------------
+    // 로그아웃 버튼
+    $("#logoutBtn").click(function() {
+        window.location.href = "/users/login";
+    });
+
     // 새로고침 버튼
-    // --------------------------
     $("#refreshBtn").click(function() {
         // content 초기화
         $("#content").html('<div id="postList"></div>');
@@ -75,9 +108,12 @@ $(document).ready(function() {
     // 알림 화면
     $("#alertBtn").click(function() {
         setActiveNav("alertBtn");
-        $("#content").load("/alerts/list"); 
+        $("#content").load("/alerts/view", function () {
+            loadAlerts();
+        });
     });
-    
+
+    // 글쓰기 화면 불러오기
     $("#writeBtn").click(function () {
         setActiveNav("writeBtn");
         $("#content").load("/posts/write");
@@ -114,7 +150,7 @@ $(document).ready(function() {
                     });
                 },
                 error: function() {
-                    alert("검색 실패");
+                    showToast("검색 실패");
                 }
             });
         }
@@ -170,7 +206,7 @@ $(document).ready(function() {
                 }
             },
             error: function() {
-                alert("좋아요 처리 실패");
+                showToast("좋아요 처리 실패");
             }
         });
     });
@@ -224,6 +260,9 @@ $(document).ready(function() {
                 postList.append(postHtml);
             });
         });
+        
+        updateAlertBadge();
+        updateMessageBadge();
     }
 
     // 게시글 상세 페이지
@@ -333,7 +372,6 @@ $(document).ready(function() {
                     <img src="${profileImg}" class="chat-profile">
                     <div class="chat-user-info">
                         <div class="chat-nickname">${nickname}</div>
-                        <div class="chat-status">온라인</div>
                     </div>
                 </div>
             </div>
@@ -344,6 +382,17 @@ $(document).ready(function() {
         $("#chatInput").focus();
 
         loadChatMessages(friendId);
+        
+        // 메시지 읽음 처리
+        $.ajax({
+            type: "PUT",
+            url: "/messages/read/" + friendId,
+            success: () => {
+                $(this).removeClass("unread");
+                updateMessageBadge();
+            },
+            error: () => { showToast("읽음 처리 실패"); }
+        });
     });
 
     // 채팅 메시지 불러오기
@@ -390,7 +439,7 @@ $(document).ready(function() {
         const message = $("#chatInput").val().trim();
 
         if (!selectedFriendId) {
-            alert("대화를 선택하세요.");
+            showToast("대화를 선택하세요.");
             return;
         }
 
@@ -408,7 +457,7 @@ $(document).ready(function() {
                 loadChatMessages(selectedFriendId);
             },
             error: function () {
-                alert("메시지 전송 실패");
+                showToast("메시지 전송 실패");
             }
         });
     });
@@ -426,5 +475,85 @@ $(document).ready(function() {
             btn.prop("disabled", true);
         });
     });
+
+    // 알림 불러오기
+    function loadAlerts() {
+        $.get("/alerts/list", function (alerts) {
+            const list = $("#alertList");
+            if(list.length === 0) {
+                $("#content").html('<div id="alertList" class="alerts-container"></div>');
+                list = $("#alertList");
+            }
+
+            list.empty();
+
+            alerts.forEach(alert => {
+                const unreadClass = alert.readYn === 'N' ? 'unread' : '';
+                const alertHtml = `
+                    <div class="alert-item ${unreadClass}" data-id="${alert.id}">
+                        <div class="alert-icon">💬</div>
+                        <div class="alert-content">
+                            <div class="alert-text">
+                                <strong>${alert.userNickname}</strong>님이 댓글을 남겼어요
+                            </div>
+                            <div class="alert-post">
+                                "${alert.content}"
+                            </div>
+                            <div class="alert-time">
+                                ${formatTimeAgo(alert.createdAt)}
+                            </div>
+                        </div>
+                    </div>
+                `;
+                list.append(alertHtml);
+            });
+        });
+    }
+
+    // 알림 클릭 이벤트 위임
+    $(document).on("click", ".alert-item", function() {
+        const alertId = $(this).data("id");
+
+        $.ajax({
+            type: "PUT",
+            url: "/alerts/read/" + alertId,
+            success: () => {
+                $(this).removeClass("unread");
+                updateAlertBadge()
+            },
+            error: () => { showToast("읽음 처리 실패"); }
+        });
+    });
+
+    // 알림 및 메시지 뱃지 업데이트
+    function updateAlertBadge() {
+        $.get("/alerts/list", function(alerts) {
+            // 읽지 않은 알림 개수
+            const unreadCount = alerts.filter(a => a.readYn === 'N').length;
+
+            // 기존 뱃지 제거
+            $(".alert-badge").remove();
+
+            if (unreadCount > 0) {
+                // #alertBtn 부모 nav-item에 뱃지 추가
+                $("#alertBtn").parent().append(`<div class="alert-badge">${unreadCount}</div>`);
+            }
+        });
+    }
+
+    function updateMessageBadge() {
+        $.get("/messages/list", function(messages) {
+            // 읽지 않은 메시지 개수
+            const unreadCount = messages.filter(m => m.readYn === 'N' && m.sender.id !== loginUserId).length;
+
+            // 기존 뱃지 제거
+            $(".message-badge").remove();
+
+            if (unreadCount > 0) {
+                // #messageBtn 부모 nav-item에 뱃지 추가
+                $("#messageBtn").parent().append(`<div class="message-badge">${unreadCount}</div>`);
+            }
+        });
+    }
 
 });

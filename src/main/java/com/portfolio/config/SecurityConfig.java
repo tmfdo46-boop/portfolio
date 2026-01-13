@@ -1,19 +1,27 @@
 package com.portfolio.config;
 
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Bean;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 
 @Configuration
-public class SecurityConfig {
+@EnableWebSecurity
+public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
-    @Bean
-    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+    @Override
+    protected void configure(HttpSecurity http) throws Exception {
         http
-            .csrf().disable() // CSRF 비활성화 → POST 요청 정상 동작
-            .authorizeHttpRequests()
-            .anyRequest().permitAll(); // 모든 요청 허용
-        return http.build();
+            .csrf().disable() // CSRF 없애기 (개발용)
+            .authorizeRequests()
+                .anyRequest().permitAll()
+                .and()
+            .logout()
+                .logoutUrl("/logout")             // 로그아웃 URL
+                .logoutSuccessUrl("/login")       // 로그아웃 후 redirect
+                .invalidateHttpSession(true)
+                .deleteCookies("JSESSIONID")
+                .permitAll();
     }
 }
+

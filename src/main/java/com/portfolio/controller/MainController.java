@@ -10,7 +10,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.SessionAttribute;
 
 import com.portfolio.model.User;
-import com.portfolio.service.PostService;
 
 @Controller
 public class MainController {
@@ -20,16 +19,9 @@ public class MainController {
         return "main";
     }
 
-    private final PostService postService;
-
-    public MainController(PostService postService) {
-        this.postService = postService;
-    }
-
     // 글쓰기 처리
     @PostMapping("/post")
     public String createPost(@RequestParam String content, @SessionAttribute("user") User user) {
-        // postService.createPost(user, content);
         return "redirect:/main";
     }
 

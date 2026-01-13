@@ -39,4 +39,13 @@ public class MessageService {
         Message message = new Message(sender, receiver, content);
         messageRepository.save(message);
     }
+
+    // 메시지 읽음 처리
+    @Transactional
+    public void markAsRead(Long userId, Long senderId) {
+        List<Message> messages = messageRepository.findBySenderIdAndReceiverId(senderId, userId);
+        for (Message msg : messages) {
+            msg.setReadYn("Y");
+        }
+    }
 }
