@@ -47,12 +47,6 @@ public class PostController {
         return postService.getAllPostsWithFollow(loginUser);
     }
 
-    // 글쓰기 fragment
-    @GetMapping("/write")
-    public String writePage() {
-        return "postWrite";
-    }
-
     // 게시글 작성
     @PostMapping("/write")
     @ResponseBody

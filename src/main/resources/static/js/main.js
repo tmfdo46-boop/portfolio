@@ -5,7 +5,7 @@ $(document).ready(function() {
     function showToast(message, type) {
         $toastMessage.text(message);
         $toast.css({
-            "background-color": type === "success" ? "#54acf9" : "#e74c3c",
+            "background-color": type === "success" ? "#54acf9" : type === "error" ? "#e74c3c" : "#f3128e9f",
             "visibility": "visible",
             "opacity": "1"
         });
@@ -79,7 +79,7 @@ $(document).ready(function() {
 
         const postId = $(this).data("post-id");
 
-        $("#content").load("/posts/postDetail.html", function() {
+        $("#content").load("/posts/detailView", function() {
             // postId를 여기서 직접 사용
             initPostDetail(postId);
         });
@@ -88,7 +88,7 @@ $(document).ready(function() {
     // 글쓰기 화면 불러오기
     $("#writeBtn").click(function() {
         setActiveNav("writeBtn");
-        $("#content").load("/posts/postWrite.html"); 
+        $("#content").load("/posts/write"); 
     });
 
     // 메시지 화면
@@ -144,7 +144,7 @@ $(document).ready(function() {
                     });
                 },
                 error: function() {
-                    showToast("검색 실패");
+                    showToast("검색 실패", "error");
                 }
             });
         }
@@ -192,7 +192,7 @@ $(document).ready(function() {
                 }
             },
             error: function() {
-                showToast("좋아요 실패");
+                showToast("좋아요 실패", "error");
             }
         });
     });
@@ -259,7 +259,7 @@ $(document).ready(function() {
         $.get("/posts/detail/" + postId, function(post){
             let imagesHtml = '';
             if (post.imageUrls && post.imageUrls.length > 0) {
-                imagesHtml = '<div class="post-images-container">';
+                imagesHtml = '<div class="post-images-container-detail">';
                 post.imageUrls.forEach(url => {
                     imagesHtml += `<img src="${url}" class="detail-image">`;
                 });
@@ -327,6 +327,63 @@ $(document).ready(function() {
         });
     }
 
+    // 게시글 작성 화면 이벤트
+    // 파일 선택 버튼 클릭
+    $(document).on("click", "#fileIcon", function () {
+        $("#postImage").click();
+    });
+
+    // 선택한 이미지 미리보기
+    $(document).on("change", "#postImage", function() {
+        const files = this.files;
+
+        // 미리보기 초기화
+        $("#previewContainer").empty();
+
+        // 새로 선택한 파일만 처리
+        if (files.length > 0) {
+            Array.from(files).forEach(file => {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    const img = $(`<img src="${e.target.result}" class="preview-img" style="width:100px; margin:5px;">`);
+                    $("#previewContainer").append(img);
+                }
+                reader.readAsDataURL(file);
+            });
+        }
+    });
+
+    // 게시 버튼 클릭
+    $(document).on("click", "#postSubmitBtn", function() {
+        const content = $("#postContent").val();
+        const files = $("#postImage")[0].files;
+
+        const formData = new FormData();
+        formData.append("content", content);
+
+        Array.from(files).forEach(file => {
+            formData.append("images", file);
+        });
+
+        $.ajax({
+            type: "POST",
+            url: "/posts/write",
+            data: formData,
+            processData: false,
+            contentType: false,
+            success: function() {
+                showToast("작성 완료되었습니다.", "success");
+                $("#postContent").val("");
+                $("#postImage").val("");
+                $("#previewContainer").empty();
+                window.location.href = "/main";
+            },
+            error: function() {
+                showToast("작성 실패하였습니다.", "error");
+            }
+        });
+    });
+
     let selectedFriendId = null;
     // 친구 리스트 로드
     function loadFriends() {
@@ -379,7 +436,7 @@ $(document).ready(function() {
                 $(this).removeClass("unread");
                 updateMessageBadge();
             },
-            error: () => { showToast("읽음 처리 실패"); }
+            error: () => { showToast("읽음 처리 실패", "error"); }
         });
     });
 
@@ -427,7 +484,7 @@ $(document).ready(function() {
         const message = $("#chatInput").val().trim();
 
         if (!selectedFriendId) {
-            showToast("대화를 선택하세요.");
+            showToast("대화를 선택하세요.", "select");
             return;
         }
 
@@ -445,7 +502,7 @@ $(document).ready(function() {
                 loadChatMessages(selectedFriendId);
             },
             error: function () {
-                showToast("메시지 전송 실패");
+                showToast("메시지 전송 실패", "error");
             }
         });
     });
@@ -504,7 +561,7 @@ $(document).ready(function() {
                     $(this).removeClass("unread");
                     updateAlertBadge()
                 },
-                error: () => { showToast("읽음 처리 실패"); }
+                error: () => { showToast("읽음 처리 실패", "error"); }
             });
         });
     }

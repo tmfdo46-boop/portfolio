@@ -175,18 +175,33 @@ body {
 /* 이미지 여러 개 가로 배치 */
 .post-images-container {
     display: flex;
-    gap: 5px;           /* 이미지 간 간격 */
-    flex-wrap: wrap;     /* 화면 폭에 맞게 줄 바꿈 가능 */
+    gap: 5px;                   /* 이미지 간 간격 */
+    overflow-x: auto;           /* 가로 스크롤 */
+    padding: 10px 0;            /* 상하 여백 */
+    -webkit-overflow-scrolling: touch; /* 모바일 부드러운 스크롤 */
 }
 
 .post-images-container img {
-    width: 20%;        /* 각 이미지 폭 */
-    height: 20%;       /* 각 이미지 높이 */
+    height: 200px;              /* 높이 고정, 비율 유지 */
+    flex: 0 0 auto;             /* flex 아이템 너비 고정, 줄 바꿈 없음 */
     border-radius: 5px;
+    object-fit: cover;          /* 잘림 없이 꽉 채움 */
 }
 
-.write-container {
-    padding: 15px;
+/* 상세 페이지 이미지 크게 */
+.post-images-container-detail {
+    display: flex;              /* 가로 정렬 */
+    gap: 5px;                   /* 이미지 간격 */
+    overflow-x: auto;           /* 가로 스크롤 */
+    padding: 10px 0;            /* 상하 여백 */
+    -webkit-overflow-scrolling: touch; /* 모바일 부드러운 스크롤 */
+}
+
+.post-images-container-detail img {
+    height: 300px;              /* 높이 고정, 비율 유지 */
+    flex: 0 0 auto;             /* flex 아이템 너비 고정, 줄 바꿈 없음 */
+    border-radius: 5px;
+    object-fit: cover;          /* 잘림 없이 꽉 채움 */
 }
 
 .write-container textarea {
