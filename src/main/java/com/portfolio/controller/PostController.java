@@ -59,7 +59,7 @@ public class PostController {
         if (loginUser == null) throw new RuntimeException("로그인 필요");
 
         Post post = new Post();
-        post.setContent(content);
+        post.setContent(content == null || content.isBlank() ? " " : content);
         post.setUser(loginUser);
 
         // 게시글 먼저 저장 → ID 필요

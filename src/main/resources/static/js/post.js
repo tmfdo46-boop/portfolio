@@ -15,7 +15,7 @@ function loadPosts() {
                 }
 
             const followBtnHtml = !post.following && post.userId !== loginUserId
-                ? `<button class="follow-btn" data-user-id="${post.userId}">+</button>`
+                ? `<button class="follow-btn" data-user-id="${post.userId}" data-nickname="${post.nickname}">+</button>`
                 : '';
 
             const heart = post.likedByMe ? "/icons/like-filled.png" : "/icons/like.png";
@@ -24,8 +24,8 @@ function loadPosts() {
                 <div class="post" data-post-id="${post.id}">
                     <div class="post-header">
                         <img class="profile-img" src="${post.profileImage}">
-                        ${followBtnHtml}
                         <span class="nickname">${post.nickname}</span>
+                        ${followBtnHtml}
                         <span class="created-at">${formatTimeAgo(post.createdAt)}</span>
                     </div>
 
@@ -69,7 +69,7 @@ function initPostDetail(postId){
         }
 
         const followBtnHtml = !post.following && post.userId !== loginUserId
-            ? `<button class="follow-btn" data-user-id="${post.userId}">+</button>`
+            ? `<button class="follow-btn" data-user-id="${post.userId}" data-nickname="${post.nickname}">+</button>`
             : '';
 
         const heart = post.likedByMe ? "/icons/like-filled.png" : "/icons/like.png";
@@ -78,8 +78,8 @@ function initPostDetail(postId){
             <div class="post" data-post-id="${post.id}">
                 <div class="post-header">
                     <img class="profile-img" src="${post.profileImage}">
-                    ${followBtnHtml}
                     <span class="nickname">${post.nickname}</span>
+                    ${followBtnHtml}
                     <span class="created-at">${formatTimeAgo(post.createdAt)}</span>
                 </div>
 
@@ -178,10 +178,12 @@ $(document).on("click", "#postSubmitBtn", function() {
         contentType: false,
         success: function() {
             showToast("작성 완료되었습니다.", "success");
-            $("#postContent").val("");
-            $("#postImage").val("");
-            $("#previewContainer").empty();
-            window.location.href = "/main";
+            setTimeout(() => {
+                $("#postContent").val("");
+                $("#postImage").val("");
+                $("#previewContainer").empty();
+                window.location.href = "/main";
+            }, 2000);
         },
         error: function() {
             showToast("작성 실패하였습니다.", "error");
@@ -223,11 +225,13 @@ $(document).on("click", ".follow-btn", function (e) {
     e.stopPropagation();
     
     const userId = $(this).data("user-id");
-    const btn = $(this);
+    const userName = $(this).data("nickname");
+    const that = $(this);
 
     $.post(`/follows/status/${userId}`, function () {
-        btn.text("✔");
-        btn.prop("disabled", true);
+        that.text("✔");
+        that.prop("disabled", true);
+        showToast(userName + " 팔로우 성공", "success");
     });
 });
 

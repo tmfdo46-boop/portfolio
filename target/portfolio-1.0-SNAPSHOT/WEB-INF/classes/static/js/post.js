@@ -15,7 +15,7 @@ function loadPosts() {
                 }
 
             const followBtnHtml = !post.following && post.userId !== loginUserId
-                ? `<button class="follow-btn" data-user-id="${post.userId}">+</button>`
+                ? `<button class="follow-btn" data-user-id="${post.userId}" data-nickname="${post.nickname}">+</button>`
                 : '';
 
             const heart = post.likedByMe ? "/icons/like-filled.png" : "/icons/like.png";
@@ -24,8 +24,8 @@ function loadPosts() {
                 <div class="post" data-post-id="${post.id}">
                     <div class="post-header">
                         <img class="profile-img" src="${post.profileImage}">
-                        ${followBtnHtml}
                         <span class="nickname">${post.nickname}</span>
+                        ${followBtnHtml}
                         <span class="created-at">${formatTimeAgo(post.createdAt)}</span>
                     </div>
 
@@ -37,7 +37,7 @@ function loadPosts() {
                     <div class="post-footer">
                         <div class="post-action like-btn ${post.likedByMe ? 'liked' : ''}">
                             <img src="${heart}">
-                            <span class="like-count">${post.likeCount}</span>
+                            <span class="like-count" id="like-count-${post.id}">${post.likeCount}</span>
                         </div>
                         <div class="post-action">
                             <img src="/icons/comment.png">
@@ -69,7 +69,7 @@ function initPostDetail(postId){
         }
 
         const followBtnHtml = !post.following && post.userId !== loginUserId
-            ? `<button class="follow-btn" data-user-id="${post.userId}">+</button>`
+            ? `<button class="follow-btn" data-user-id="${post.userId}" data-nickname="${post.nickname}">+</button>`
             : '';
 
         const heart = post.likedByMe ? "/icons/like-filled.png" : "/icons/like.png";
@@ -78,8 +78,8 @@ function initPostDetail(postId){
             <div class="post" data-post-id="${post.id}">
                 <div class="post-header">
                     <img class="profile-img" src="${post.profileImage}">
-                    ${followBtnHtml}
                     <span class="nickname">${post.nickname}</span>
+                    ${followBtnHtml}
                     <span class="created-at">${formatTimeAgo(post.createdAt)}</span>
                 </div>
 
@@ -201,8 +201,13 @@ $(document).on("click", ".like-btn", function(e) {
         type: "POST",
         url: `/likes/post/${postId}`,
         success: function(postDto) {
-            if(postDto != "already") {
-                $(`#likeCount-${postId}`).text(postDto.likeCount);
+            if(postDto.result === "already") {
+                $(`#like-count-${postId}`).text(postDto.likeCount);
+                $(postDiv).find(".like-btn").removeClass("liked");
+                likeImg.attr("src", "/icons/like.png"); // 빈 하트
+            }
+            else {
+                $(`#like-count-${postId}`).text(postDto.likeCount);
                 $(postDiv).find(".like-btn").addClass("liked");
                 likeImg.attr("src", "/icons/like-filled.png"); // 기본 하트
             }
@@ -218,11 +223,12 @@ $(document).on("click", ".follow-btn", function (e) {
     e.stopPropagation();
     
     const userId = $(this).data("user-id");
-    const btn = $(this);
+    const userName = $(this).data("nickname");
 
     $.post(`/follows/status/${userId}`, function () {
-        btn.text("✔");
-        btn.prop("disabled", true);
+        $(this).text("✔");
+        $(this).prop("disabled", true);
+        showToast(userName + " 팔로우 성공", "success");
     });
 });
 

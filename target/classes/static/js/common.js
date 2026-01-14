@@ -15,9 +15,10 @@ function loadLoginUser(callback) {
 }
 
 // 토스트 메시지 요소
-const $toast = $("#toast");
-const $toastMessage = $("#toastMessage");
 function showToast(message, type) {
+    const $toast = $("#toast");
+    const $toastMessage = $("#toastMessage");
+
     $toastMessage.text(message);
     $toast.css({
         "background-color": type === "success" ? "#54acf9" : type === "error" ? "#e74c3c" : "#f3128e9f",
