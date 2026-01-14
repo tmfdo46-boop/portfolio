@@ -68,7 +68,7 @@ public class CommentService {
         String preview = postContent.length() > 20 ? postContent.substring(0, 20) + "..." : postContent;
 
         String content = commentUser.getNickname() + "님이 '" + preview + "'에 댓글을 남겼습니다.";
-        Alert alert = new Alert(postUser, content);
+        Alert alert = new Alert(postUser.getId(), content);
         alertRepository.save(alert);
     }
 }

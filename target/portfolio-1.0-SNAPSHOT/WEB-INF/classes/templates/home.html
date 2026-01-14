@@ -1,0 +1,12 @@
+<div id="post-list">
+    <h3>홈 타임라인</h3>
+    <ul>
+        <c:forEach items="${posts}" var="post">
+            <li>
+                <strong>${post.user.nickname}</strong>:
+                ${post.content} 
+                <small>${post.createdAt}</small>
+            </li>
+        </c:forEach>
+    </ul>
+</div>

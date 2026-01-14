@@ -1,0 +1,104 @@
+/* 1. 배경 설정 최적화 */
+body {
+    background-image: url('/images/image1.png'); 
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed;
+    background-repeat: no-repeat;
+    margin: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    font-family: 'Malgun Gothic', sans-serif;
+    background-color: #333;
+}
+
+/* 2. 회원가입 박스 */
+.signup-container {
+    background-color: rgba(255, 255, 255, 0.95);
+    padding: 30px 40px;
+    border-radius: 15px;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.3);
+    width: 100%;
+    max-width: 600px;
+    box-sizing: border-box;
+    margin: 20px;
+}
+
+h2 { text-align: center; margin-bottom: 25px; color: #333; }
+
+/* 3. 입력 그룹 */
+.input-group {
+    display: block;
+    margin-bottom: 15px;
+    width: 100%;
+}
+
+.input-group label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: bold;
+    font-size: 14px;
+    color: #555;
+}
+
+.input-group input[type="text"],
+.input-group input[type="password"],
+.input-group input[type="email"],
+.input-group input[type="tel"] {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    font-size: 15px;
+    box-sizing: border-box;
+}
+
+/* 4. 체크박스 그룹 */
+.checkbox-group {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    margin: 20px 0;
+}
+.checkbox-group input { margin-top: 4px; }
+.checkbox-group label { font-size: 13px; color: #666; font-weight: normal; }
+
+/* 5. 버튼 */
+.submit-btn {
+    width: 100%;
+    padding: 15px;
+    background-color: #54acf9;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    font-size: 17px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background 0.3s;
+}
+.submit-btn:hover { background-color: #9cd1ff; }
+
+.links { text-align: center; margin-top: 20px; font-size: 14px; color: #666; }
+.links a { color: #54acf9; text-decoration: none; font-weight: bold; }
+
+/* 6. 토스트 메시지 */
+#toast {
+    visibility: hidden;
+    min-width: 250px;
+    max-width: 400px;
+    background-color: #9cd1ff;
+    color: #fff;
+    text-align: center;
+    border-radius: 8px;
+    padding: 14px 20px;
+    position: fixed;
+    z-index: 9999;
+    left: 50%;
+    bottom: 50px;
+    font-size: 14px;
+    transform: translateX(-50%);
+    box-shadow: 0 6px 20px rgba(0,0,0,0.15);
+    transition: all 0.3s ease-in-out;
+}

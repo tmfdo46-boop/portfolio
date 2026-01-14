@@ -6,6 +6,13 @@
     <title>Main</title>
     <link rel="stylesheet" href="/css/main.css">
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="/js/common.js?ver=1.0"></script>
+    
+    <script src="/js/post.js?ver=1.1"></script>
+    <script src="/js/message.js?ver=1.0"></script>
+    <script src="/js/alert.js?ver=1.0"></script>
+    <script src="/js/profile.js?ver=1.0"></script>
+
     <script src="/js/main.js?ver=1.7"></script>
 </head>
 <body>
@@ -28,5 +35,22 @@
         <div class="nav-item"><img id="alertBtn" src="/icons/alert.png" alt="알림" class="nav-icon"></div>
         <div class="nav-item"><img id="profileBtn" src="/icons/profile.png" alt="프로필" class="nav-icon"></div>
     </div>
+
+    <!-- 이미지 모달 -->
+    <div id="imageModal" class="modal">
+        <button id="moreBtn" class="more-btn">...</button>
+        <span class="close">&times;</span>
+        <img class="modal-content" id="modalImage">
+        
+        <div id="bottomSheet" class="bottom-sheet">
+            <button class="sheet-btn" id="saveBtn">
+                <img src="/icons/save.png" class="sheet-icon"> 갤러리 저장
+            </button>
+            <button class="sheet-btn" id="shareBtn">
+                <img src="/icons/share.png" class="sheet-icon"> 공유하기
+            </button>
+        </div>
+    </div>
+
 </body>
 </html>

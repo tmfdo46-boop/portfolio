@@ -1,7 +1,15 @@
 package com.portfolio.model;
 
-import javax.persistence.*;
 import java.time.LocalDateTime;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.PrePersist;
+import javax.persistence.SequenceGenerator;
+import javax.persistence.Table;
 
 @Entity
 @Table(name = "TB_ALERT")
@@ -17,9 +25,8 @@ public class Alert {
     @Column(name = "ALERT_ID")
     private Long id;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "USER_ID", nullable = false)
-    private User user; // 알림 받는 사용자
+    @Column(name="USER_ID", nullable = false)
+    private Long userId;
 
     @Column(name = "CONTENT", nullable = false, length = 500)
     private String content;
@@ -37,16 +44,16 @@ public class Alert {
 
     public Alert() {}
 
-    public Alert(User user, String content) {
-        this.user = user;
+    public Alert(Long userId, String content) {
+        this.userId = userId;
         this.content = content;
     }
 
     // Getter / Setter
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
-    public User getUser() { return user; }
-    public void setUser(User user) { this.user = user; }
+    public Long getUserId() { return userId; }
+    public void setUserId(Long userId) { this.userId = userId; }
     public String getContent() { return content; }
     public void setContent(String content) { this.content = content; }
     public LocalDateTime getCreatedAt() { return createdAt; }

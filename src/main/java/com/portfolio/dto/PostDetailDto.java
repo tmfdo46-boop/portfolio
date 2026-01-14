@@ -1,11 +1,11 @@
 package com.portfolio.dto;
 
-import com.portfolio.model.Post;
-import com.portfolio.model.PostImage;
-
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
+
+import com.portfolio.model.Post;
+import com.portfolio.model.PostImage;
 
 public class PostDetailDto {
     private Long id;
@@ -18,6 +18,7 @@ public class PostDetailDto {
     private List<String> imageUrls;
     private String profileImage;
     private boolean following;
+    private boolean likedByMe;
 
     public PostDetailDto(Post post) {
         this.id = post.getId();
@@ -47,10 +48,12 @@ public class PostDetailDto {
                                   .collect(Collectors.toList());
         }
     }
-    
-    public PostDetailDto(Post post, boolean isFollowing) {
+
+    public PostDetailDto(Post post, boolean isFollowing, Long loginUserId) {
         this(post);
         this.following = isFollowing;
+        this.likedByMe = post.getLikes().stream()
+                             .anyMatch(like -> like.getUser().getId().equals(loginUserId));
     }
 
     // getter
@@ -74,4 +77,6 @@ public class PostDetailDto {
     public void setProfileImage(String profileImage) { this.profileImage = profileImage; }
     public boolean isFollowing() { return following; }
     public void setFollowing(boolean following) { this.following = following; }
+    public boolean isLikedByMe() { return likedByMe; }
+    public void setLikedByMe(boolean likedByMe) { this.likedByMe = likedByMe; }
 }

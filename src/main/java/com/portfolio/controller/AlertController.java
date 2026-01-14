@@ -38,7 +38,7 @@ public class AlertController {
                         a.getId(),
                         a.getContent(),
                         a.getCreatedAt(),
-                        a.getUser().getNickname(),  // Lazy 로딩 가능, 트랜잭션 안에서
+                        a.getUserId(),  // Lazy 로딩 가능, 트랜잭션 안에서
                         a.getReadYn()
                 ))
                 .collect(Collectors.toList());

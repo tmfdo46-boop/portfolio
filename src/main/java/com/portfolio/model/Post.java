@@ -4,7 +4,20 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.persistence.*;
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
+import javax.persistence.PrePersist;
+import javax.persistence.SequenceGenerator;
+import javax.persistence.Table;
+import javax.persistence.Transient;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
@@ -39,6 +52,9 @@ public class Post {
     public void prePersist() {
         this.createdAt = LocalDateTime.now();
     }
+
+    @Transient
+    private String result; // 좋아요 처리 결과 저장 필드
 
     @OneToMany(mappedBy="post")
     @JsonIgnore
@@ -81,4 +97,6 @@ public class Post {
     public void setComments(List<Comment> comments) { this.comments = comments; }
     public List<Like> getLikes() { return likes; }
     public void setLikes(List<Like> likes) { this.likes = likes; }
+    public String getResult() { return result; }
+    public void setResult(String result) { this.result = result; }
 }

@@ -32,50 +32,11 @@
 4. **내페이지**
    - 내가 작성한 글만 확인 가능
    - 프로필 정보 표시
+   - 프로필 수정
+   - 나만의 갤러리 정리 가능
 
 5. **알림**
    - 좋아요/댓글 알림 구조 (화면만, 추후 기능 확장 가능)
-
-## 🔹 프로젝트 구조 예시
-portfolio/
-│
-├─ src/
-│   ├─ main/
-│   │   ├─ java/
-│   │   │   └─ com/portfolio/controller/
-│   │   │       ├─ MainController.java
-│   │   │       ├─ PostController.java
-│   │   │       └─ UserController.java
-│   │   │
-│   │   ├─ resources/
-│   │   │   ├─ application.properties
-│   │   │   └─ static/
-│   │   │       ├─ css/
-│   │   │       │   └─ main.css
-│   │   │       ├─ js/
-│   │   │       │   └─ main.js
-│   │   │       └─ images/
-│   │   │           └─ (아이콘/프로필 사진)
-│   │   │
-│   │   └─ webapp/
-│   │       └─ WEB-INF/
-│   │           ├─ views/
-│   │           │   ├─ main.html       ← 메인 레이아웃
-│   │           │   ├─ home.html       ← AJAX로 불러올 홈 타임라인
-│   │           │   ├─ message.html    ← 메시지 화면
-│   │           │   ├─ alarm.html      ← 알림 화면
-│   │           │   ├─ mypage.html     ← 내페이지
-│   │           │   └─ post/
-│   │           │       └─ write.html  ← 글쓰기 페이지
-│   │           │
-│   │           └─ templates/          ← Thymeleaf 사용 시
-│   │
-│   └─ test/
-│       └─ java/
-│           └─ com/portfolio/
-│
-├─ pom.xml
-└─ README.md
 
 ## 🔹 화면 구성
 ### 1️⃣ 로그인 / 회원가입

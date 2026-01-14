@@ -115,6 +115,6 @@ public class PostController {
             isFollowing = followService.isFollowing(loginUser.getId(), post.getUser().getId());
         }
 
-        return new PostDetailDto(post, isFollowing);
+        return new PostDetailDto(post, isFollowing, loginUser.getId());
     }
 }

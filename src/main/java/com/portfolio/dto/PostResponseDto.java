@@ -18,6 +18,7 @@ public class PostResponseDto {
     private String profileImage;
     private boolean following;
     private boolean likedByMe;
+    private String result;
 
     public PostResponseDto(Post post) {
         this.id = post.getId();
@@ -25,6 +26,7 @@ public class PostResponseDto {
         this.content = post.getContent();
         this.nickname = post.getUser().getNickname();
         this.createdAt = post.getCreatedAt();
+        this.result = post.getResult();
         
         if(post.getComments() != null) {
             this.commentCount = post.getComments().size();
@@ -77,4 +79,6 @@ public class PostResponseDto {
     public void setFollowing(boolean following) { this.following = following; }
     public boolean isLikedByMe() { return likedByMe; }
     public void setLikedByMe(boolean likedByMe) { this.likedByMe = likedByMe; }
+    public String getResult() { return result; }
+    public void setResult(String result) { this.result = result; }
 }
