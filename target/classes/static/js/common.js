@@ -1,5 +1,14 @@
 window.loginUserId = null;
 
+$(document).ajaxError(function (event, jqxhr) {
+    if (jqxhr.status === 401) {
+        showToast("로그인이 필요합니다", "error");
+        setTimeout(() => {
+            window.location.href = "/users/login";
+        }, 1500);
+    }
+});
+
 function loadLoginUser(callback) {
     $.get("/users/session", function (data) {
         window.loginUser = data; // { id, email, nickname ... }
