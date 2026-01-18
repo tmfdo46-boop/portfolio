@@ -26,7 +26,7 @@ $(document).ready(function() {
                 case "messageBtn": $("#content").load("/messages/view", function () { loadFriends();}); break;
                 case "writeBtn": $("#content").load("/posts/write"); break;
                 case "alertBtn": $("#content").load("/alerts/view", function () { loadAlerts(); }); break;
-                case "profileBtn": $("#content").load("/users/profile"); break;
+                case "profileBtn": $("#content").load("/users/profilePage", function() { loadProfile(); }); break;
             }
         });
     });
@@ -94,7 +94,9 @@ $(document).ready(function() {
     // 프로필 화면 불러오기
     $("#profileBtn").click(function() {
         setActiveNav("profileBtn");
-        $("#content").load("/users/profile"); 
+        $("#content").load("/users/profilePage", function() {
+            loadProfile();
+        });
     });
 
     // 검색 버튼 (기본 예시)

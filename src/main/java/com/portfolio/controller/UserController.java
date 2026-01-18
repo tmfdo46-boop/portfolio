@@ -2,34 +2,38 @@ package com.portfolio.controller;
 
 import java.io.File;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpSession;
 
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.portfolio.model.Post;
 import com.portfolio.model.User;
 import com.portfolio.repository.UserRepository;
 import com.portfolio.service.UserService;
+import com.portfolio.service.PostService;
 
-@Controller
+@RestController
 @RequestMapping("/users")
 public class UserController {
-
     private final UserService userService;
     private final UserRepository userRepository;
+    private final PostService postService;
 
-    public UserController(UserService userService, UserRepository userRepository) {
+    public UserController(UserService userService, UserRepository userRepository, PostService postService) {
         this.userService = userService;
         this.userRepository = userRepository;
-    }
-
-    // 회원가입 화면
-    @GetMapping("/register")
-    public String registerForm() {
-        return "register"; // templates/register.html
+        this.postService = postService;
     }
 
     // AJAX 회원가입 처리
@@ -64,12 +68,6 @@ public class UserController {
         res.put("status", "success");
         res.put("message", "회원가입이 완료되었습니다!");
         return res;
-    }
-
-    // 로그인 화면
-    @GetMapping("/login")
-    public String loginForm() {
-        return "login";
     }
 
     // 로그인 처리
@@ -139,4 +137,35 @@ public class UserController {
         userRepository.save(user);
     }
 
+    // 프로필 조회
+    @GetMapping("/profile")
+    @ResponseBody
+    public Map<String, Object> getProfile(Long userId) {
+        Map<String, Object> res = new HashMap<>();
+
+        if (userId == null) {
+            res.put("user", null);
+            res.put("isOwner", false);
+            return res;
+        }
+
+        User user = userService.findById(userId);
+
+        Map<String, Integer> userCounts = userService.userCounts(user.getId());
+        res.put("followerCount", userCounts.get("followerCount"));
+        res.put("followingCount", userCounts.get("followingCount"));
+        res.put("postCount", userCounts.get("postCount"));
+
+        res.put("user", user);
+        res.put("isOwner", true);
+
+        return res;
+    }
+
+    // 프로필 수정
+    @PutMapping("/update/{id}")
+    public void updateProfile(@RequestBody Map<String, String> data, HttpSession session) {
+        User user = (User) session.getAttribute("loginUser");
+        // userService.updateNickname(user.getId(), data.get("nickname"));
+    }
 }

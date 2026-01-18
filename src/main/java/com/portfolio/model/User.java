@@ -39,6 +39,9 @@ public class User {
     @Column(name = "CREATED_AT", nullable = false)
     private LocalDateTime createdAt;
 
+    @Column(name = "BIO", length = 300)
+    private String bio;
+
     @PrePersist
     public void prePersist() {
         this.createdAt = LocalDateTime.now();
@@ -92,4 +95,6 @@ public class User {
     public void setCreatedAt(LocalDateTime createdAt) { this.createdAt = createdAt; }
     public String getProfileImage() { return profileImage; }
     public void setProfileImage(String profileImage) { this.profileImage = profileImage; }
+    public String getBio() { return bio; }
+    public void setBio(String bio) { this.bio = bio; }
 }

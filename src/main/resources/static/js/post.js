@@ -258,12 +258,12 @@ $("#moreBtn").click(function() {
 });
 
 // 갤러리 저장
-$("#saveBtn").click(function() {
-    const link = document.createElement("a");
-    link.href = $("#modalImage").attr("src");
-    link.download = "image.jpg";
-    link.click();
-});
+// $("#saveBtn").click(function() {
+//     const link = document.createElement("a");
+//     link.href = $("#modalImage").attr("src");
+//     link.download = "image.jpg";
+//     link.click();
+// });
 
 // 공유하기
 $("#shareBtn").click(function() {

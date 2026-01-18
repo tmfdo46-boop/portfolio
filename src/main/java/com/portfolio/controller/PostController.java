@@ -47,6 +47,13 @@ public class PostController {
         return postService.getAllPostsWithFollow(loginUser);
     }
 
+    @GetMapping("/listMy")
+    @ResponseBody
+    public List<PostResponseDto> getPostsMy(HttpSession session){
+        User loginUser = (User) session.getAttribute("loginUser");
+        return postService.getMyPosts(loginUser);
+    }
+
     // 게시글 작성
     @PostMapping("/write")
     @ResponseBody

@@ -61,4 +61,12 @@ public class PostService {
             })
             .collect(Collectors.toList());
     }
+
+    public List<PostResponseDto> getMyPosts(User loginUser) {
+        return postRepository.findAllByUserOrderByCreatedAtDesc(loginUser).stream()
+            .map(post -> {
+                return new PostResponseDto(post, true, loginUser != null ? loginUser.getId() : null);
+            })
+            .collect(Collectors.toList());
+    }
 }

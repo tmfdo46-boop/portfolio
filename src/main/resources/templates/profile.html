@@ -1,0 +1,49 @@
+<div class="profile-header">
+    <div class="profile-pic-container">
+        <img id="profileImg" src="/images/default_profile.png" alt="프로필 사진" class="profile-pic">
+        <label for="profileUpload" class="upload-btn">+</label>
+        <input type="file" id="profileUpload" style="display:none">
+    </div>
+    <div class="profile-info" data-user-id="">
+        <h2 id="nickname">닉네임</h2>
+        <p id="bio">소개글</p>
+        <div class="profile-buttons">
+            <button id="editProfileBtn">프로필 편집</button>
+            <button id="shareProfileBtn">프로필 공유</button>
+        </div>
+        <div class="follow-info">
+            <div>
+                <span id="postCount"></span>
+                <p>스레드</p>
+            </div>
+            <div>
+                <span id="followerCount"></span>
+                <p>팔로워</p>
+            </div>
+            <div>
+                <span id="followingCount"></span>
+                <p>팔로잉</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="tabs">
+    <div class="tab-menu">
+        <div class="tab active" data-tab="post">게시글</div>
+        <div class="tab" data-tab="gallery">갤러리</div>
+    </div>
+    <div class="tab-content">
+        <div class="tab-panel active" id="postPanel">
+            <div id="postList"></div>
+        </div>
+
+        <div class="tab-panel" id="galleryPanel">
+            갤러리 준비중
+        </div>
+    </div>
+</div>
+
+<div class="tab-content" id="tabContent">
+    <!-- AJAX로 게시글 로드 -->
+</div>
