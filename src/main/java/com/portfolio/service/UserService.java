@@ -1,8 +1,10 @@
 package com.portfolio.service;
 
 import java.util.HashMap;
-import java.util.Optional;
 import java.util.Map;
+import java.util.Optional;
+
+import javax.transaction.Transactional;
 
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -56,4 +58,14 @@ public class UserService {
         return map;
     }
 
+    @Transactional
+    public void updateProfile(Long userId, String nickname, String hp, String address, String bio) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new IllegalArgumentException("유저 없음"));
+
+        user.setNickname(nickname);
+        user.setHp(hp);
+        user.setAddress(address);
+        user.setBio(bio);
+    }
 }

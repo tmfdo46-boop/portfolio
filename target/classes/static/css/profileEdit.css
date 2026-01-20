@@ -1,0 +1,74 @@
+.profile-edit {
+    padding: 16px;
+}
+
+/* 제목 */
+.profile-edit h3 {
+    font-size: 18px;
+    margin-bottom: 20px;
+}
+
+/* 입력 그룹 */
+.form-group {
+    margin-bottom: 16px;
+}
+
+.form-group label {
+    display: block;
+    font-size: 13px;
+    color: #666;
+    margin-bottom: 6px;
+}
+
+/* input, textarea */
+.form-group input,
+.form-group textarea {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    font-size: 14px;
+    box-sizing: border-box;
+}
+
+/* 읽기 전용 필드 */
+.form-group input:disabled {
+    background-color: #f5f5f5;
+    color: #999;
+}
+
+/* 소개글 textarea */
+.form-group textarea {
+    resize: none;
+    line-height: 1.4;
+    min-height: 80px;
+}
+
+/* 글자수 */
+.text-count {
+    text-align: right;
+    font-size: 12px;
+    color: #999;
+    margin-top: 4px;
+}
+
+/* 버튼 */
+#saveProfileBtn {
+    width: 100%;
+    padding: 12px;
+    background-color: #0095f6;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    font-size: 15px;
+    margin-bottom: 10px;
+}
+
+#cancelBtn {
+    width: 100%;
+    padding: 12px;
+    background-color: #eee;
+    border: none;
+    border-radius: 6px;
+    font-size: 15px;
+}

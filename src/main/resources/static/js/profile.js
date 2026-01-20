@@ -121,30 +121,44 @@ $(document).on("change", "#profileUpload", function() {
 });
 
 // 프로필 편집 버튼 클릭
-$("#editProfileBtn").click(function() {
-    // const newNickname = prompt("닉네임을 입력하세요", $("#nickname").text());
-    // const newBio = prompt("소개글을 입력하세요", $("#bio").text());
-
-    // if(newNickname !== null && newBio !== null) {
-    //     $.ajax({
-    //         type: "PUT",
-    //         url: "/users/profile",
-    //         contentType: "application/json",
-    //         data: JSON.stringify({ nickname: newNickname, bio: newBio }),
-    //         success: function() {
-    //             loadProfile(); // 수정 후 갱신
-    //             alert("프로필이 업데이트 되었습니다.");
-    //         }
-    //     });
-    // }
+$(document).on("click", "#editProfileBtn", function() {
+    loadProfileEdit();
 });
 
-// // 공유하기
-// $("#shareProfileBtn").click(function() {
-//     const url = $("#modalImage").attr("src");
-//     if (navigator.share) {
-//         navigator.share({ url: url }).catch(console.error);
-//     } else {
-//         showToast("공유 기능이 지원되지 않는 브라우저입니다.", "error");
-//     }
-// });
+function loadProfileEdit() {
+    $("#content").load("/users/profile/edit", function() {
+
+        $.ajax({
+            type: "GET",
+            url: `/users/profile?userId=${loginUserId}`,
+            success: function(user) {
+                const userData = user.user;
+                $("#email").val(userData.email);
+                $("#name").val(userData.name);
+                $("#nickname").val(userData.nickname);
+                $("#hp").val(userData.hp);
+                $("#address").val(userData.address);
+                $("#bio").val(userData.bio);
+                $("#bioCount").text(userData.bio ? userData.bio.length : 0);
+            }
+        });
+    });
+}
+
+// 공유하기
+$(document).on("click", "#shareProfileBtn", function() {
+    const userId = loginUserId;
+    const profileUrl = window.location.origin + "/users/profile/" + userId;
+
+    // 모바일 / 최신 브라우저
+    if (navigator.share) {
+        navigator.share({
+            title: "내 프로필",
+            text: "내 프로필을 확인해보세요",
+            url: profileUrl
+        }).catch(() => {});
+    }  else {// PC / 공유 API 미지원
+        copyToClipboard(profileUrl);
+        showToast("프로필 링크가 복사되었습니다!", "sucess");
+    }
+});

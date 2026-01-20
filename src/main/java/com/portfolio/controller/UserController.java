@@ -2,7 +2,6 @@ package com.portfolio.controller;
 
 import java.io.File;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpSession;
@@ -17,23 +16,19 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.portfolio.model.Post;
 import com.portfolio.model.User;
 import com.portfolio.repository.UserRepository;
 import com.portfolio.service.UserService;
-import com.portfolio.service.PostService;
 
 @RestController
 @RequestMapping("/users")
 public class UserController {
     private final UserService userService;
     private final UserRepository userRepository;
-    private final PostService postService;
 
-    public UserController(UserService userService, UserRepository userRepository, PostService postService) {
+    public UserController(UserService userService, UserRepository userRepository) {
         this.userService = userService;
         this.userRepository = userRepository;
-        this.postService = postService;
     }
 
     // AJAX 회원가입 처리
@@ -163,9 +158,19 @@ public class UserController {
     }
 
     // 프로필 수정
-    @PutMapping("/update/{id}")
-    public void updateProfile(@RequestBody Map<String, String> data, HttpSession session) {
-        User user = (User) session.getAttribute("loginUser");
-        // userService.updateNickname(user.getId(), data.get("nickname"));
+    @PutMapping("/profile/update")
+    public void updateProfile(@RequestBody Map<String, String> data,
+                            HttpSession session) {
+
+        User loginUser = (User) session.getAttribute("loginUser");
+
+        userService.updateProfile(
+            loginUser.getId(),
+            data.get("nickname"),
+            data.get("hp"),
+            data.get("address"),
+            data.get("bio")
+        );
     }
+
 }

@@ -25,4 +25,10 @@ public class UserViewController {
     public String profilePage() {
         return "profile"; // templates/profile.html
     }
+
+    // 프로필 편집 화면
+    @GetMapping("/profile/edit")
+    public String editProfile() {
+        return "profileEdit";
+    }
 }
