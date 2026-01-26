@@ -248,25 +248,90 @@ $(document).on("click", ".post-content img", function(e) {
 });
 
 // 모달 닫기
-$(".close").click(function() {
-    $("#imageModal").fadeOut();
+$(document).on("click", "#closeImage", function() {
+    $("#imageModal").hide();
 });
 
 // ... 버튼 클릭 시 옵션 토글
-$("#moreBtn").click(function() {
+$(document).on("click", "#moreBtn", function(e) {
     $("#bottomSheet").toggleClass("show");
 });
 
 // 갤러리 저장
-// $("#saveBtn").click(function() {
-//     const link = document.createElement("a");
-//     link.href = $("#modalImage").attr("src");
-//     link.download = "image.jpg";
-//     link.click();
-// });
+$(document).on("click", "#saveBtn", function(e) {
+    const imageUrl = $("#modalImage").attr("src");
+    $("#folderModal").data("imageUrl", imageUrl);
+    
+    // 사용자 폴더 불러오기
+    $.ajax({
+        type: "GET",
+        url: "/gallery/folders",
+        success: function(folders) {
+            const folderList = $("#folderList");
+            folderList.empty();
+            if (folders.length > 0) {
+                folders.forEach(folder => {
+                    folderList.append(`<button class="folder-btn" id="folder-btn" data-id="${folder.id}">${folder.folderName}</button>`);
+                });
+                $("#folderModal").show();
+            }else{
+                showToast("폴더가 없습니다. 새 폴더를 만드세요.", "alert");
+                $("#addFolderModal").show();
+            }
+        }
+    });
+});
+
+// 폴더 선택
+$(document).on("click", "#folder-btn", function(e) {
+    $(".folder-btn").removeClass("active");
+    $(this).addClass("active");
+
+    const folderId = $(this).data("id");
+    saveFolder(folderId);
+});
+
+// 해당 폴더에 이미지 저장
+function saveFolder(folderId){
+    imageUrl = $("#folderModal").data("imageUrl");
+    if (!imageUrl) {
+        alert("저장할 이미지가 없습니다.");
+        return;
+    }
+
+    $.ajax({
+        type: "POST",
+        url: "/gallery/save",
+        contentType: "application/json",
+        data: JSON.stringify({
+            imageUrl: imageUrl,
+            folderId: folderId
+        }),
+        success: function (data) {
+            if (data == "folderAlready"){
+                showToast("존재하지 않는 폴더입니다.", "error");
+            }else if (data == "Already"){
+                showToast("이미 해당 폴더에 저장된 이미지입니다.", "error");
+            }else{
+                $("#folderModal").hide();
+                $("#imageModal").hide();
+
+                showToast("갤러리에 저장 완료", "success");
+            }
+        },
+        error: function () {
+            showToast("갤러리에 저장 실패","error");
+        }
+    });
+}
+
+// 모달 닫기
+$(document).on("click", "#closeFolder", function() {
+    $("#folderModal").hide();
+});
 
 // 공유하기
-$("#shareBtn").click(function() {
+$(document).on("click", "#shareBtn", function(e) {
     const url = $("#modalImage").attr("src");
     if (navigator.share) {
         navigator.share({ url: url }).catch(console.error);

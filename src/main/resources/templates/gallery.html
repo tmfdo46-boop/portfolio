@@ -1,0 +1,22 @@
+<div class="gallery-container">
+    <div class="gallery-header">
+        <div class="folder-list" id="folderList">
+            <!-- 폴더 버튼들 동적으로 로드 -->
+        </div>
+        <button id="addFolderBtn" class="add-folder-btn">+ 폴더</button>
+    </div>
+
+    <div class="gallery-images" id="galleryImages">
+        <!-- 선택한 폴더 이미지 목록 -->
+    </div>
+</div>
+
+<!-- 폴더 추가 모달 -->
+<div id="addFolderModal" class="modal">
+    <div class="modal-content">
+        <span class="close" id="closeFolderModal">&times;</span>
+        <h3>새 폴더명</h3>
+        <input type="text" id="newFolderName" placeholder="폴더 이름">
+        <button id="createFolderBtn">생성</button>
+    </div>
+</div>

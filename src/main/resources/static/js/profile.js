@@ -12,6 +12,7 @@ $(document).on("click", ".tab", function() {
         loadMyPosts();
     } else if (tab === "gallery") {
         $("#galleryPanel").addClass("active");
+        loadGalleryFolder();
     }
 });
 
@@ -159,6 +160,24 @@ $(document).on("click", "#shareProfileBtn", function() {
         }).catch(() => {});
     }  else {// PC / 공유 API 미지원
         copyToClipboard(profileUrl);
-        showToast("프로필 링크가 복사되었습니다!", "sucess");
+        showToast("프로필 링크가 복사되었습니다!", "success");
     }
 });
+
+// 갤러리 폴더 불러오기
+function loadGalleryFolder(){
+    $("#galleryPanel").load("/gallery/view", function() {
+
+        $.ajax({
+            type: "GET",
+            url: "/gallery/folders",
+            success: function(folders) {
+                const folderList = $("#folderList");
+                folderList.empty();
+                folders.forEach(folder => {
+                    folderList.append(`<button class="folder-list" id="folder-list" data-id="${folder.id}">${folder.folderName}</button>`);
+                });
+            }
+        });
+    });
+}

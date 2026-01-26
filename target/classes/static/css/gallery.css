@@ -1,0 +1,79 @@
+.gallery-container {
+    padding: 10px;
+}
+
+.gallery-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 10px;
+}
+
+.folder-list {
+    display: flex;
+    overflow-x: auto;
+    gap: 8px;
+}
+
+.folder-list button {
+    padding: 6px 12px;
+    border-radius: 20px;
+    border: 1px solid #ccc;
+    background-color: #f0f0f0;
+    cursor: pointer;
+    white-space: nowrap;
+}
+
+.folder-list button.active {
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+}
+
+.add-folder-btn {
+    padding: 6px 12px;
+    border-radius: 20px;
+    background-color: #28a745;
+    color: #fff;
+    border: none;
+    cursor: pointer;
+}
+
+.gallery-images {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+    gap: 6px;
+}
+
+.gallery-images img {
+    width: 100%;
+    height: 100px;
+    object-fit: cover;
+    border-radius: 10px;
+    cursor: pointer;
+}
+
+#addFolderModal .modal-content {
+    width: 80%;
+    max-width: 300px;
+    margin: 150px auto;
+    padding: 20px;
+    border-radius: 15px;
+    background-color: #fff;
+    text-align: center;
+}
+
+#folderButtons {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin: 15px 0;
+}
+
+#folderButtons button {
+    padding: 10px;
+    border-radius: 12px;
+    border: 1px solid #ccc;
+    background-color: #f0f0f0;
+    cursor: pointer;
+}

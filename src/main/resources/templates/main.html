@@ -7,6 +7,7 @@
     <link rel="stylesheet" href="/css/main.css">
     <link rel="stylesheet" href="/css/profile.css">
     <link rel="stylesheet" href="/css/profileEdit.css">
+    <link rel="stylesheet" href="/css/gallery.css">
 
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     
@@ -17,6 +18,7 @@
     <script src="/js/alert.js?ver=1.0"></script>
     <script src="/js/profile.js?ver=1.0"></script>
     <script src="/js/profileEdit.js?ver=1.0"></script>
+    <script src="/js/gallery.js?ver=1.1"></script>
 
     <script src="/js/main.js?ver=1.7"></script>
 </head>
@@ -43,7 +45,7 @@
     <!-- 이미지 모달 -->
     <div id="imageModal" class="modal">
         <button id="moreBtn" class="more-btn">...</button>
-        <span class="close">&times;</span>
+        <span id="closeImage" class="close">&times;</span>
         <img class="modal-content" id="modalImage">
         
         <div id="bottomSheet" class="bottom-sheet">
@@ -53,6 +55,28 @@
             <button class="sheet-btn" id="shareBtn">
                 <img src="/icons/share.png" class="sheet-icon"> 공유하기
             </button>
+        </div>
+    </div>
+
+    <!-- 폴더 모달 -->
+    <div id="folderModal" class="modal">
+        <div class="modal-content">
+            <span id="closeFolder" class="close">&times;</span>
+            <div class="folder-list" id="folderList">
+                <!-- 폴더 버튼들 동적으로 로드 -->
+            </div>
+            <br>
+            <button id="addFolderBtn" class="add-folder-btn">+ 폴더</button>
+        </div>
+    </div>
+
+    <!-- 폴더 추가 모달 -->
+    <div id="addFolderModal" class="modal">
+        <div class="modal-content">
+            <span class="close" id="closeFolderModal">&times;</span>
+            <h3>새 폴더명</h3>
+            <input type="text" id="newFolderName" placeholder="폴더 이름">
+            <button id="createFolderBtn">생성</button>
         </div>
     </div>
 
